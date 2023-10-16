@@ -5,6 +5,7 @@
 #include <functional>
 #include <stdexcept>
 #include <filesystem>
+#include <iostream>
 
 namespace fs = std::filesystem;
 
@@ -23,8 +24,10 @@ public:
 
     void* tryLoadFunc(std::string libraryPath, std::string functionName)
     {
-        libraryHandle = LoadLibrary(libraryPath.data());
-        if (!libraryHandle)
+        std::string fullLibraryPath = "plugins/" + libraryPath;
+        libraryHandle = LoadLibrary(fullLibraryPath.data());
+        
+        if (libraryHandle)
         {
             void* symbol = GetProcAddress(libraryHandle, functionName.data());
             if (symbol)
