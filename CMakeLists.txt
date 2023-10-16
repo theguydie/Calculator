@@ -5,5 +5,9 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("CalculatorCMAKE")
 
+set(CMAKE_CXX_STANDARD 17) # установка стандарта C++17
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # требование использования стандарта
+set(CMAKE_CXX_EXTENSIONS OFF) # отключение расширений компилятора
+
 # Включите подпроекты.
 add_subdirectory ("CalculatorCMAKE")

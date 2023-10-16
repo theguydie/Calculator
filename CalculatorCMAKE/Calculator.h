@@ -10,7 +10,7 @@ private:
 	Converter conv;
 	Loader load;
 public:
-	double from_chars(std::string s);
 	Calculator() : pars(), conv() {};
+	double Calculator::from_chars(std::string s);
 	double Calculate(std::string expression);
 };

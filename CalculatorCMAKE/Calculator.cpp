@@ -1,23 +1,18 @@
 #include "Calculator.h"
 
+#include <charconv>
+#include <stdio.h>
+#include <system_error>
 #include <stack>
 #include <iostream>
 
 double Calculator::from_chars(std::string s) {
-	bool flag = true;
-	int sign = 1;
-	double res = 0;
-	int i = 0;
-	for (auto c : s) {
-		if (c == '.') flag = false;
-		else if (c == '-') sign = -1;
-		else {
-			res *= 10;
-			res += double(int(c) - int('0'));
-			if (!flag) i++;
-		}
+	try {
+		return std::stod(s);
 	}
-	return sign * res / std::pow(10, i);
+	catch (const std::invalid_argument& e) {
+		throw std::runtime_error("Error: invalid argument '" + s + "'");
+	}
 }
 
 double Calculator::Calculate(std::string expression) {
@@ -48,27 +43,28 @@ double Calculator::Calculate(std::string expression) {
 			else if (token == "/") {
 				double expr1 = exprs.top();
 				exprs.pop();
+				if (expr2 == 0) throw std::runtime_error("division by 0");
 				exprs.push(expr1 / expr2);
 			}
 			else if (token == "^") {
-				auto Pow = load.loadFunction<double(double, double)>("plugins/power.dll", "Pow");
+				auto Pow = load.loadFunction<double(double, double)>("Pow");
 
 				double expr1 = exprs.top();
 				exprs.pop();
 				exprs.push(Pow(expr1, expr2));
 			}
 			else if (token == "sin") {
-				auto Sin = load.loadFunction<double(double)>("plugins/sinus.dll", "Sin");
+				auto Sin = load.loadFunction<double(double)>("Sin");
 
 				exprs.push(Sin(expr2));
 			}
 			else if (token == "cos") {
-				auto Cos = load.loadFunction<double(double)>("plugins/cosinus.dll", "Cos");
+				auto Cos = load.loadFunction<double(double)>("Cos");
 
 				exprs.push(Cos(expr2));
 			}
-			//case number
 		}
+		//case number
 		else {
 			exprs.push(from_chars(token));
 		}
